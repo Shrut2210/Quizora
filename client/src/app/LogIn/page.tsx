@@ -9,6 +9,7 @@ import Spline from '@splinetool/react-spline/next';
 
 export default function LogIn() {
     const [isLogin, setIsLogin] = useState(true);
+    
     return (
         <>
         <div className="w-screen mx-auto font-serif rounded-md  h-screen overflow-hidden">
@@ -30,7 +31,7 @@ export default function LogIn() {
                                     
                             <form className="flex flex-col justify-center p-5 w-4/5">
                                 <div className="flex justify-center items-center">
-                                    <Image src={logo} className="h-1/2 w-1/2 " alt="botho"/>
+                                    
                                 </div>
                                 <label htmlFor="" className="text-xl text-start py-2">Email</label>
                                 <input type="email" placeholder="xyz@gmail.com" className="border text-xl py-2 px-3 rounded-lg outline-none hover:outline-none bg-transparent" required/>
@@ -43,9 +44,10 @@ export default function LogIn() {
                         
                         {/* right part / image / daglo */}
                         <div>
-                        <Spline
-                            scene="https://prod.spline.design/yl3wQjmKd9PymIVA/scene.splinecode" 
-                        />
+                            <Spline
+                                            scene="https://prod.spline.design/qJO6EDvqMObwesFE/scene.splinecode" 
+                                            
+      />
                         </div>
                     </div> :
                     // signup side
