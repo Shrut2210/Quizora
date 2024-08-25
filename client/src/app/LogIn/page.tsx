@@ -2,15 +2,18 @@
 import {useState } from "react"
 import { Boxes } from "@/components/BoxesCore";
 import { cn } from "@/lib/utils";
+import { Vortex } from "@/components/Vortex";
 export default function LogIn() {
     const [isLogin, setIsLogin] = useState(true);
     return (
         <>
-        <div className="h-screen relative font-serif w-full overflow-hidden bg-[#100D28] flex flex-col items-center justify-center rounded-lg ">
-        
-            {/* <Boxes /> */}
-            <div className={cn("md:text-4xl w-3/4 h-2/3 text-xl text-white relative z-20")}>
-            {
+        <div className="w-screen mx-auto rounded-md  h-screen overflow-hidden">
+            <Vortex
+                backgroundColor="black"
+                className="flex items-center flex-col justify-center px-2 md:px-10 py-4 w-full h-full"
+            >
+                <div className="text-white text-2xl md:text-6xl font-bold text-center">
+                {
                 isLogin ?
                     // login side
                     <div className="flex h-full backdrop-blur-sm backdrop-filter bg-opacity-10">
@@ -35,8 +38,10 @@ export default function LogIn() {
                     // signup side
                     <div></div>
             }
-            </div>
-        </div>
+                </div>
+            </Vortex>
+    </div>
+            
             
         </>
     )
