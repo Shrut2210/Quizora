@@ -1,0 +1,21 @@
+create
+    {title, description } <- user
+    {quizId} <- system
+
+    questions (MCQ, MMCQ)
+        ...userd entered questions
+
+    questions.save()
+    other quiz details
+
+    quiz.save()
+
+edit
+
+delete
+
+display
+
+display by id
+
+12v32r2vftt

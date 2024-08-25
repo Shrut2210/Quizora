@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import mongoose, { model, Schema } from "mongoose";
 
 const quizSchema = new Schema({
   quizId: {
@@ -20,15 +20,17 @@ const quizSchema = new Schema({
   },
   timeLimit: {
     type: Number,
+    default: 0,
     required: true,
   },
   difficultyLevel: {
     type: String,
+    default: "none",
     required: true,
-    enum: ["easy", "medium", "hard"],
+    enum: ["easy", "medium", "hard", "none"],
   },
-  category: { type: String, required: true },
-  public: { type: Boolean, required: true, default: false },
+  category: { type: String },
+  visibility: { type: Boolean, required: true, default: false },
   tags: [{ type: String }],
   totalQuestions: { type: Number, default: 0 },
   totalAttempts: { type: Number, default: 0 },
@@ -44,6 +46,7 @@ const quizSchema = new Schema({
   ],
 });
 
-const Quiz = model("Quiz", quizSchema);
-
-module.exports = Quiz;
+// const Quiz = model("Quiz", quizSchema);m
+// const Quiz = mongoose.models.quizzes || mongoose.model("Quiz", quizSchema)
+const Quiz = mongoose.models.Quiz || mongoose.model('Quiz', quizSchema);
+export default Quiz;
