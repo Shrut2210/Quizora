@@ -33,20 +33,19 @@ export default function LogIn() {
                                     <Image src={logo} className="h-1/2 w-1/2 " alt="botho"/>
                                 </div>
                                 <label htmlFor="" className="text-xl text-start py-2">Email</label>
-                                <input type="email" placeholder="xyz@gmail.com" className="border text-xl py-3 px-3 rounded-lg outline-none hover:outline-none bg-transparent" required/>
+                                <input type="email" placeholder="xyz@gmail.com" className="border text-xl py-2 px-3 rounded-lg outline-none hover:outline-none bg-transparent" required/>
                                     
-                                <label htmlFor="" className="text-xl mt-6 text-start py-2">Password</label>
-                                <input type="password" placeholder="password" className="border text-xl py-3 px-3 rounded-lg outline-none hover:outline-none bg-transparent" required/>
-                                <button type="submit" className="bg-[#9207E6] text-lg mt-10 py-4 rounded-md">Login</button>
+                                <label htmlFor="" className="text-xl mt-3 text-start py-2">Password</label>
+                                <input type="password" placeholder="password" className="border text-xl py-2 px-3 rounded-lg outline-none hover:outline-none bg-transparent" required/>
+                                <button type="submit" className="bg-[#9207E6] text-xl mt-10 py-2 rounded-md">Login</button>
                             </form>
                         </div>
                         
                         {/* right part / image / daglo */}
                         <div>
-                            <Spline
-                                            scene="https://prod.spline.design/qJO6EDvqMObwesFE/scene.splinecode" 
-                                            
-      />
+                        <Spline
+                            scene="https://prod.spline.design/yl3wQjmKd9PymIVA/scene.splinecode" 
+                        />
                         </div>
                     </div> :
                     // signup side
