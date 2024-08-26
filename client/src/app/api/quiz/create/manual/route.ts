@@ -15,7 +15,7 @@ export const POST = async(res : Request)=>{
         const {title, description, timeLimit, difficultyLevel, category, visibility, tags, totalQuestions, creatorId} = await res.json();
         const quizId = uuidv4().slice(0,6);
 
-        const quizKey = `quiz:12v32r2vftt`
+        const quizKey = `quiz:${creatorId}`
         
         console.log(quizId)
         const questions = await client.hGetAll(quizKey);
@@ -56,12 +56,17 @@ export const POST = async(res : Request)=>{
         });
         
         await quiz.save();
-        // await client.del(quizKey);
+        
+        const user = await User.findById(creatorId);
+        user.quizzesCreated.push(quiz._id);
+        await user.save();
+        
+        await client.del(quizKey);
         await client.quit();
         
         return NextResponse.json({success:true,data:quiz},{status:200})
     }catch(error){
         console.log(error)
-        return NextResponse.json({success:false,message:"Error while fetching quiz"},{status:500})
+        return NextResponse.json({success:false,message:"CREATE_MANUAL : Error while fetching quiz"},{status:500})
     }
 }

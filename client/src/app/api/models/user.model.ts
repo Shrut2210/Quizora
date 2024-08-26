@@ -40,6 +40,6 @@ const userSchema = new Schema({
   quizzesAttempted: [{ type: Schema.Types.ObjectId, ref: "Quiz" }],
 });
 
-const User = mongoose.models.users || model("User", userSchema)
+const User = mongoose.models.User || model("User", userSchema)
 
 export default User;
