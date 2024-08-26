@@ -19,3 +19,214 @@ display
 display by id
 
 12v32r2vftt
+
+
+
+
+import { GoogleAIFileManager } from "@google/generative-ai/server";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { NextResponse } from "next/server";
+import { promises as fs } from "fs";
+import path from "path";
+import dotenv from "dotenv";
+dotenv.config()
+
+
+// Disable Next.js from handling body parsing since we will handle it ourselves
+export const config = {
+    api: {
+        bodyParser: false,
+    },
+};
+
+export async function PUT(req: Request) {
+    try {
+        // Parse the incoming form data to handle file uploads
+        const data = await req.formData();
+        const file = data.get("file") as File | null;
+        const prompt = data.get("prompt") as string | null;
+
+        if (!file) {
+            return NextResponse.json(
+                { success: false, message: "No file uploaded" },
+                { status: 400 }
+            );
+        }
+
+        const fileName: string = Math.random().toString(36).substring(2, 17);
+        const fileExtension = file.type.split('/')[1];
+        console.log(fileName, fileExtension);
+        const filePath = path.join(process.cwd(), 'public', 'assets', 'media', `${fileName}.${fileExtension}`);
+
+        // Convert the file to a buffer
+        const byteData = await file.arrayBuffer();
+        const buffer = Buffer.from(byteData);
+
+        // Save the file to the file system
+        console.log("haise save chalu to thai gai");
+        await fs.writeFile(filePath, buffer);
+        console.log("haise save to thai gai");
+        // Upload the file to Google AI File Manager
+        const fileManager = new GoogleAIFileManager(process.env.GEMINI_API_KEY!);
+        const uploadResponse = await fileManager.uploadFile(filePath, {
+            mimeType: file.type,
+            displayName: file.name,
+        });
+
+        const getResponse = await fileManager.getFile(uploadResponse.file.name);
+        console.log(`Retrieved file ${getResponse.displayName} as ${getResponse.uri}`);
+
+        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+        const model = genAI.getGenerativeModel({
+            model: "gemini-1.5-pro",
+        });
+
+        const result = await model.generateContent([
+            {
+                fileData: {
+                    mimeType: uploadResponse.file.mimeType,
+                    fileUri: uploadResponse.file.uri,
+                },
+            },
+            { text: prompt! },
+        ]);
+
+        console.log(result.response.text());
+
+
+        return NextResponse.json(
+            { success: true, message: result.response.text() },
+            { status: 201 }
+        );
+    } catch (error) {
+        console.error("Error while processing the file:", error);
+        return NextResponse.json(
+            { success: false, message: "Error while processing the file" },
+            { status: 500 }
+        );
+    }
+}
+
+
+// // utils/extractText.js
+// import pdfParse from 'pdf-parse';
+// import mammoth from 'mammoth';
+// import pptxParser from 'pptx-parser';
+// import fs from 'fs';
+
+// export async function extractText(file) {
+//   const fileType = file.mimetype;
+
+//   if (fileType === 'application/pdf') {
+//     const dataBuffer = fs.readFileSync(file.filepath);
+//     const data = await pdfParse(dataBuffer);
+//     return data.text;
+//   }
+
+//   if (fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+//     const result = await mammoth.extractRawText({ path: file.filepath });
+//     return result.value;
+//   }
+
+//   if (fileType === 'application/vnd.openxmlformats-officedocument.presentationml.presentation') {
+//     const presentation = await pptxParser.parse(file.filepath);
+//     return presentation.map(slide => slide.text).join('\n');
+//   }
+
+//   throw new Error('Unsupported file type');
+// }
+
+
+// export default async function handler(req, res) {
+//   if (req.method === "POST") {
+//     const form = new IncomingForm();
+
+//     form.parse(req, async (err, fields, files) => {
+//       if (err) {
+//         return res.status(500).json({ error: "Error parsing the file" });
+//       }
+
+//       try {
+//         const file = files.file; // 'file' is the name of the form field
+//         const text = await extractText(file);
+//         res.status(200).json({ text });
+//       } catch (error) {
+//         res.status(500).json({ error: error.message });
+//       }
+//     });
+//   } else {
+//     res.status(405).json({ message: "Method not allowed" });
+//   }
+// }
+
+
+
+
+
+
+
+// gemini valo code 
+
+
+import { NextResponse } from "next/server";
+import multer from "multer";
+import fs from "fs";
+import { Request, Response } from "express";
+import { extractTextFromPDF, extractTextFromPPT, extractTextFromWord, getResponseFromGemini } from "@/lib/gemini";
+
+const upload = multer({ dest: "uploads/" });
+
+export const POST = async (req: Request & { file: any }, res: Response) => {
+  upload.single("file");
+
+  const filePath = req.file.path;
+  const { type, prompt } = req.body;
+  let extractedText = "";
+
+  try {
+    if (req.file.mimetype === "application/pdf") {
+      extractedText = await extractTextFromPDF(filePath);
+    } else if (
+      req.file.mimetype ===
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ) {
+      extractedText = await extractTextFromWord(filePath);
+    } else if (
+      req.file.mimetype ===
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    ) {
+      extractedText = await extractTextFromPPT(filePath);
+    } else {
+      return res.status(400).json({ error: "Unsupported file type" });
+    }
+
+    const response = await getResponseFromGemini(extractedText, type, prompt);
+
+    return NextResponse.json({ response });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { success: false, message: "GEMINI : Error while fetching quiz" },
+      { status: 500 }
+    );
+  } finally {
+    // Clean up the uploaded file
+    fs.unlinkSync(filePath);
+  }
+};
+
+
+/*
+const formData = new FormData();
+formData.append('file', fileInput.files[0]);  // Replace `fileInput` with your file input element
+formData.append('type', 'text'); // or 'chat'
+
+fetch('/upload-file', {
+    method: 'POST',
+    body: formData,
+})
+.then(response => response.json())
+.then(data => console.log(data))
+.catch(error => console.error('Error:', error));
+
+*/
