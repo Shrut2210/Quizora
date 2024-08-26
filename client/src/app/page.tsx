@@ -75,7 +75,7 @@ export default function Home() {
         </div>
       </div>
 
-        <div className="overflow-hidden h-72 flex justify-center bg-white">
+        <div className="overflow-x-hidden h-72 flex justify-center bg-white">
           <div className="flex flex-row items-center justify-center gap-10 mb-10 w-full">
             <div className="text-9xl font-extrabold">Features</div>
             <AnimatedTooltip items={people} />
