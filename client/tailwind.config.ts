@@ -11,6 +11,9 @@ module.exports = {
   theme: {
     // rest of the code
   },
+  images: {
+    domains: ['images.unsplash.com'],
+  },
   plugins: [
     // rest of the code
     addVariablesForColors,
