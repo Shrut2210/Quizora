@@ -46,10 +46,7 @@ export default function Home() {
         </div>
       </div>
 
-
-
-
-
+    
 
       {/* different features components */}
 
