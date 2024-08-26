@@ -6,14 +6,14 @@ import "./style.scss";
 import Image from "next/image";
 import logo from "../../../public/assets/logo.png";
 import glogo from "../../../public/assets/google-logo.png";
-import { Toaster, toast } from "react-hot-toast"; // Import Toaster and toast
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { Toaster, toast } from "react-hot-toast";
 
 export default function SignUp() {
   const [switched, setSwitched] = useState(false);
-
   return (
-    <div className="w-screen mx-auto font-serif rounded-md h-screen overflow-hidden">
-      <Toaster /> {/* Add Toaster here to display toast notifications */}
+    <div className="w-screen mx-auto rounded-md h-screen overflow-hidden">
+      <Toaster />
       <Vortex
         backgroundColor="black"
         baseHue={950}
@@ -28,16 +28,13 @@ export default function SignUp() {
                 <div className="demo__forms">
                   <div className="demo__form">
                     <div className="demo__form-content h-full w-full">
-                      <FakeForm
-                        fields={["email", "password"]}
-                        submitLabel="Sign in"
-                      />
+                      <FakeForm fields={["Email", "Password"]} submitLabel="Sign in" />
                     </div>
                   </div>
                   <div className="demo__form">
                     <div className="demo__form-content h-full w-full">
                       <FakeForm
-                        fields={["username", "email", "password"]}
+                        fields={["Username", "Email", "Password"]}
                         submitLabel="Sign up"
                       />
                     </div>
@@ -87,19 +84,65 @@ interface FakeFormProps {
   submitLabel: string;
 }
 
+interface FormData {
+  Username?: string;
+  Email?: string;
+  Password?: string;
+}
+
+interface FormErrors {
+  Username?: string;
+  Email?: string;
+  Password?: string;
+}
+
 function FakeForm({ fields, submitLabel }: FakeFormProps) {
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState<FormData>({});
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
+    setErrors({
+      ...errors,
+      [e.target.name]: "",
+    });
+  };
+
+  const validateForm = () => {
+    let valid = true;
+    const newErrors: FormErrors = {};
+
+    fields.forEach((field) => {
+      const value = formData[field as keyof FormData];
+      if (!value) {
+        newErrors[field as keyof FormErrors] = `${field} is required`;
+        valid = false;
+      } else {
+        if (field === "Email" && !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value)) {
+          newErrors[field as keyof FormErrors] = "Invalid email address";
+          valid = false;
+        }
+        if (field === "Password" && value.length < 6) {
+          newErrors[field as keyof FormErrors] = "Password must be at least 6 characters long";
+          valid = false;
+        }
+      }
+    });
+
+    setErrors(newErrors);
+    return valid;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(formData);
+    if (!validateForm()) {
+      toast.error("Please fix the errors before submitting");
+      return;
+    }
 
     try {
       let url = "";
@@ -122,12 +165,16 @@ function FakeForm({ fields, submitLabel }: FakeFormProps) {
       }
 
       const result = await response.json();
-      toast.success(`${submitLabel} successful!`); // Show success toast
+      toast.success(`${submitLabel} successful!`);
       console.log(`${submitLabel} successful:`, result);
     } catch (error) {
-      toast.error(`Error during ${submitLabel.toLowerCase()}.`); // Show error toast
+      toast.error(`Error during ${submitLabel.toLowerCase()}.`);
       console.error(`Error during ${submitLabel.toLowerCase()}:`, error);
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -139,19 +186,30 @@ function FakeForm({ fields, submitLabel }: FakeFormProps) {
         <Image src={logo} className="h-2/3 w-full" alt="botho" />
       </div>
       {fields.map((field) => (
-        <label className="form__field" key={field}>
-          <span className="form__field-label">{field}</span>
+        <label className="form__field relative" key={field}>
           <input
-            className="form__field-input"
-            type={field}
+            className={"form__field-input text-xl "}
+            placeholder={field}
+            type={field === "Password" && !showPassword ? "password" : "text"}
             name={field}
-            value={(formData as any)[field] || ""}
+            value={formData[field as keyof FormData] || ""}
             onChange={handleChange}
           />
+          {field === "Password" && (
+            <span
+              className="absolute top-2 right-2 cursor-pointer"
+              onClick={togglePasswordVisibility}
+            >
+              {showPassword ? <FaRegEyeSlash className="text-xl" /> : <FaRegEye className="text-xl" />}
+            </span>
+          )}
+          {errors[field as keyof FormErrors] && (
+            <p className="text-red-500 text-sm absolute top-[60%] left-2.5">{errors[field as keyof FormErrors]}</p>
+          )}
         </label>
       ))}
       <button type="submit" className="form__submit">
-        {submitLabel}
+          {submitLabel}
       </button>
       <div className="flex flex-col items-center justify-center gap-4 py-4">
         <span className="text-xl">Or </span>

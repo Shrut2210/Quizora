@@ -315,24 +315,23 @@ input, button {
       font-size: 16px;
       color: #cfcfcf;
       text-transform: uppercase;
+      border-bottom: 1px solid rgb(199, 79, 229);
+
     }
 
     &-input {
       display: block;
       width: 100%;
-      font-size: 16px;
-      padding: 6px 6px;
-      border-radius: 5px;
-      text-align: center;
+      padding: 6px 10px;
+    margin-bottom: 2rem;
       border-bottom: 1px solid rgb(199, 79, 229);
     }
   }
 
   &__submit {
-    margin-top: 3rem;
+    margin-top: 1rem;
     border-radius: 5px;
     width: 100%;
-    padding: 10px 0px;
     background: #9207E6;
   }
 }
