@@ -8,3 +8,15 @@
   -webkit-mask-image: linear-gradient(black, transparent);
   mask-image: linear-gradient(black, transparent);
 }
+
+.line_1
+{
+  position: relative;
+  right: 700px;
+  top: 0px;
+  white-space: nowrap;
+}
+
+.inner_line{
+  transform: translate3d(0px, 0px,0px);
+}
