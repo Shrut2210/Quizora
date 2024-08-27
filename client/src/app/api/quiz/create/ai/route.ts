@@ -11,11 +11,15 @@ export const POST = async (req: Request) => {
   let filePathForDelete = "";
   try {
     const { fileName, prompt } = await req.json();
-
+    console.log(fileName);
     const filePath = await download(fileName);
-    console.lo
+    console.log(filePath)
     filePathForDelete = filePath;
-    let text = "";
+    let text;
+
+    text = await extractTextFromPDF(filePath);
+
+    console.log(text)
     if (fileName.endsWith(".pdf")) {
       text = await extractTextFromPDF(filePath);
     } else if (fileName.endsWith(".docx")) {
@@ -24,11 +28,13 @@ export const POST = async (req: Request) => {
     if (text === "ERROR") {
       return NextResponse.json({ message: "AI : Error processing file" });
     }
-    // const responseText = await getResponseFromGemini(text, "text", prompt);
+    const responseText = await getResponseFromGemini(text, "text", prompt);
+
+    console.log(responseText);
 
     return NextResponse.json({
       message: "File processed and saved successfully",
-      responseText:"Hey"
+      responseText:"Success"
     });
   } catch (error) {
     console.error("Error processing file:", error);

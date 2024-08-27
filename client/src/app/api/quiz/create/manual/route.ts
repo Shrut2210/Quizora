@@ -4,7 +4,7 @@ import User from "@/app/api/models/user.model";
 import Quiz from "@/app/api/models/quiz.model";
 import Question from "@/app/api/models/question.model";
 import dotenv from "dotenv";
-import client from "@/lib/redis";
+import client from "@/lib/redis"; 
 const { v4: uuidv4 } = require('uuid');
 dotenv.config()
 
