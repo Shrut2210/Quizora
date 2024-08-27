@@ -13,7 +13,7 @@ export const POST = async (req: Request) => {
     const { fileName, prompt } = await req.json();
 
     const filePath = await download(fileName);
-    consol
+    console.lo
     filePathForDelete = filePath;
     let text = "";
     if (fileName.endsWith(".pdf")) {
