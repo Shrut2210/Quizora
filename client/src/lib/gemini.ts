@@ -25,19 +25,14 @@ const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 export async function extractTextFromPDF(filePath: any) {
   console.log("Occured at extractPdf function");
    try {
-     const pdfBuffer = Buffer.from(filePath, "base64");
-     const pdfDoc = await PDFDocument.load(pdfBuffer);
-     const textArray = [];
+    console.log(filePath);
+    return "Hello"
+     // Path to the PDF file in your project folder
+    //  const filePath = path.join(process.cwd(), filePath);
 
-     const pages = pdfDoc.getPages();
-     for (const page of pages) {
-       const textContent = await page.getTextContent();
-       textArray.push(textContent.items.map((item:any) => item.str).join(" "));
-     }
+    //  const pdfBuffer = fs.readFileSync(filePath);
+    //  const data = await pdfParse(pdfBuffer);
 
-     const extractedText = textArray.join("\n\n");
-     return extractedText
-    //  res.status(200).json({ text: extractedText });
    } catch (error) {
      console.error("Error extracting text from PDF:", error);
      return "ERROR";

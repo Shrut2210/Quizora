@@ -13,6 +13,7 @@ export const POST = async (req: Request) => {
     const { fileName, prompt } = await req.json();
 
     const filePath = await download(fileName);
+    consol
     filePathForDelete = filePath;
     let text = "";
     if (fileName.endsWith(".pdf")) {
@@ -23,16 +24,16 @@ export const POST = async (req: Request) => {
     if (text === "ERROR") {
       return NextResponse.json({ message: "AI : Error processing file" });
     }
-    const responseText = await getResponseFromGemini(text, "text", prompt);
+    // const responseText = await getResponseFromGemini(text, "text", prompt);
 
     return NextResponse.json({
       message: "File processed and saved successfully",
-      responseText,
+      responseText:"Hey"
     });
   } catch (error) {
     console.error("Error processing file:", error);
     return NextResponse.json({ message: "AI : Error processing file" });
   } finally {
-    fs.unlinkSync(filePathForDelete);
+    // fs.unlinkSync(filePathForDelete);
   }
 };

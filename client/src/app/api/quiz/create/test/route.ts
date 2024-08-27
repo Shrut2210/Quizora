@@ -114,8 +114,8 @@ export async function PUT(req: Request) {
     console.log(filePath);
     
     // extractedText = await extractTextFromWord(filePath);
-    extractedText = await extractTextFromPPT(filePath);
-    console.log(extractedText);
+    text = await extractTextFromPDF(filePath);
+    console.log(text);
          
 
     //  try {
@@ -135,13 +135,13 @@ export async function PUT(req: Request) {
     //      return NextResponse.json({ error: "Unsupported file type" });
     //    }
 
-       const response = await getResponseFromGemini(
-         extractedText,
-         "text",
-         "Generate a json which contains 5 question with 4 option for each from the data of this file."
-     );
+    //    const response = await getResponseFromGemini(
+    //      extractedText,
+    //      "text",
+    //      "Generate a json which contains 5 question with 4 option for each from the data of this file."
+    //  );
 
-    return NextResponse.json({ message: response });
+    return NextResponse.json({ message: text });
   } catch (error) {
     console.log(error);
     return NextResponse.json(
