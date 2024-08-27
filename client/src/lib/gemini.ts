@@ -4,10 +4,10 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import fs from 'fs';
 import { pdfToText } from "pdf-ts";
 import pptxgen from "pptxgenjs";
-import {
-  DocumentProcessorServiceClient,
-  UploadDocumentRequest
-} from "@google-cloud/documentai";
+// import {
+//   DocumentProcessorServiceClient,
+//   UploadDocumentRequest
+// } from "@google-cloud/documentai";
 
 
 dotenv.config();
@@ -20,7 +20,7 @@ const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 export async function extractTextFromPDF(filePath: any) {
   console.log("Occured at extractPdf function ", filePath);
   try {
-    const pdfBuffer:Buffer = await fs.readFileSync(filePath);
+    const pdfBuffer: Buffer = await fs.readFileSync(filePath);
     const text = await pdfToText(pdfBuffer);
     return text;
   } catch (error) {
@@ -47,22 +47,22 @@ export async function getResponseFromGemini(text: any, type: any, prompt: any) {
   }
 }
 
-export async function extractingTextFromPPT(pptFilePath: any){
-  const client = new DocumentProcessorServiceClient();
+export async function extractingTextFromPPT(pptFilePath: any) {
+  // const client = new DocumentProcessorServiceClient();
 
-  // Upload the PPT file to Cloud Storage
-  const [bucketName, fileName] = await client.uploadDocument(pptFilePath);
+  // // Upload the PPT file to Cloud Storage
+  // const [bucketName, fileName] = await client.uploadDocument(pptFilePath);
 
-  // Process the document
-  const [result]:any = await client.processDocument({
-    name: `gs://${bucketName}/${fileName}`,
-    processorType: "PROCESSOR_TYPE_UNSPECIFIED",
-  });
+  // // Process the document
+  // const [result]:any = await client.processDocument({
+  //   name: `gs://${bucketName}/${fileName}`,
+  //   processorType: "PROCESSOR_TYPE_UNSPECIFIED",
+  // });
 
-  // Extract the text from the processed document
-  const text = result.text;
+  // // Extract the text from the processed document
+  // const text = result.text;
 
-  return text;
+  // return text;
 }
 
 /**

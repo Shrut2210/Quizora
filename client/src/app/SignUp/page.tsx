@@ -209,7 +209,7 @@ function FakeForm({ fields, submitLabel }: FakeFormProps) {
         </label>
       ))}
       <button type="submit" className="form__submit">
-          {submitLabel}
+        {submitLabel}
       </button>
       <div className="flex flex-col items-center justify-center gap-4 py-4">
         <span className="text-xl">Or </span>
