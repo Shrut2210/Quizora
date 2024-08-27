@@ -35,7 +35,7 @@ export default function FileUpload() {
   return (
     <div>
       <input type="file" onChange={handleFileChange} />
-      <button onClick={handleUpload}>Upload</button>
+      <button onClick={handleUpload} className='text-white'>Upload</button>
       {progress > 0 && <p>Upload progress: {progress}%</p>}
       {downloadURL && (
         <p>

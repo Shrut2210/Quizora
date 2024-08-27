@@ -10,6 +10,9 @@ node_modules
 # testing
 /coverage
 
+# files
+./public/uploads
+
 # next.js
 /.next/
 /out/

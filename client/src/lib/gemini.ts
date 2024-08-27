@@ -6,6 +6,8 @@ import fs from "fs";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import JSZip from "jszip";
 import path from "path";
+import { PDFDocument } from "pdf-lib";
+
 // import PptxGenJs from "node-pptx";
 
 // import { PptxParser } from "pptx2json";
@@ -22,18 +24,24 @@ const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 // Extract text from PDF
 export async function extractTextFromPDF(filePath: any) {
   console.log("Occured at extractPdf function");
-  
-  // console.log(dataBuffer.toString());
-  
-  try{
-    const dataBuffer = fs.readFileSync(filePath);
-    // const data = await pdfParse(dataBuffer);
-    // return data.text;
-  }catch(e){
-    return "Error while reading PDF file"
-  }
+   try {
+     const pdfBuffer = Buffer.from(filePath, "base64");
+     const pdfDoc = await PDFDocument.load(pdfBuffer);
+     const textArray = [];
 
-  return "Hello"
+     const pages = pdfDoc.getPages();
+     for (const page of pages) {
+       const textContent = await page.getTextContent();
+       textArray.push(textContent.items.map((item:any) => item.str).join(" "));
+     }
+
+     const extractedText = textArray.join("\n\n");
+     return extractedText
+    //  res.status(200).json({ text: extractedText });
+   } catch (error) {
+     console.error("Error extracting text from PDF:", error);
+     return "ERROR";
+   }
 }
 
 // Extract text from Word
