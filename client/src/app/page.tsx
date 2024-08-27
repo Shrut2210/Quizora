@@ -1,8 +1,36 @@
+"use client";
+import React from "react";
 import Image from "next/image";
 import logo from "../../public/assets/logo.png" 
 import Spline from '@splinetool/react-spline/next';
 import Link from "next/link";
 import bg_1 from "../../public/assets/bg-1.png";
+import { AnimatedTooltip } from "@/components/AnimatedTooltip";
+import "./style.css";
+
+const people = [
+  {
+    id: 1,
+    name: "John Doe",
+    designation: "Software Engineer",
+    image:
+      "",
+  },
+  {
+    id: 2,
+    name: "Robert Johnson",
+    designation: "Product Manager",
+    image:
+      "",
+  },
+  {
+    id: 3,
+    name: "Jane Smith",
+    designation: "Data Scientist",
+    image:
+      "",
+  },
+];
 
 export default function Home() {
   return (
@@ -33,23 +61,30 @@ export default function Home() {
         <div className="h-full w-full bg-[#100D28] bg-opacity-80 absolute top-0 "></div>
     </div>
       
-      
+      <div className="h-60 relative">
 
+      </div>
 
       {/* smalll details sectoion */}
 
-      <div className="h-screen flex justify-end items-end absolute top-0 w-full overflow-hidden">
-        <div className="flex flex-col justify-center items-center rounded-3xl bg-transparent h-1/2 bg-white w-full text-5xl font-bold gap-3 rotate-2">
-          <div className="-rotate-2">Quizzing is the future of learning.</div>
-          <div className="-rotate-2">We craft quizzes that inspire.</div>
-          <div className="-rotate-2">We create quizzes that engage and educate.</div>
+      <div className="h-96 flex overflow-hidden">
+        <div className="flex flex-col justify-center items-center bg-transparent h-full bg-white w-full text-5xl font-bold gap-3 ">
+          <div>Quizzing is the future of learning.</div>
+          <div>We craft quizzes that inspire.</div>
+          <div>We create quizzes that engage and educate.</div>
         </div>
       </div>
 
-
-
-
-
+        <div className="overflow-x-hidden h-72 flex justify-center bg-white">
+          <div className="flex flex-row items-center justify-center gap-10 mb-10 w-full">
+            <div className="text-9xl font-extrabold">Features</div>
+            <AnimatedTooltip items={people} />
+            <div className="text-9xl font-extrabold">Activities</div>
+            <AnimatedTooltip items={people} />
+            <div className="text-9xl font-extrabold">Learning</div>
+            <AnimatedTooltip items={people} />
+          </div>
+        </div>
 
       {/* different features components */}
 
